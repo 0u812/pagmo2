@@ -149,6 +149,7 @@ void expose_algorithms_0()
                  bp::make_function(lcast([](mbh &uda) -> algorithm & { return uda.get_inner_algorithm(); }),
                                    bp::return_internal_reference<>()),
                  generic_uda_inner_algorithm_docstring().c_str());
+    mbh_.enable_pickling();
     // cstrs_self_adaptive meta-algo.
     auto cstrs_sa
         = expose_algorithm_pygmo<cstrs_self_adaptive>("cstrs_self_adaptive", cstrs_self_adaptive_docstring().c_str());
@@ -161,6 +162,7 @@ void expose_algorithms_0()
                                                           iters, a, pagmo::random_device::next());
                                                   }),
                                                   bp::default_call_policies()));
+    cstrs_sa.enable_pickling();
     expose_algo_log(cstrs_sa, cstrs_self_adaptive_get_log_docstring().c_str());
     add_property(
         cstrs_sa, "inner_algorithm",
@@ -179,6 +181,7 @@ void expose_algorithms_0()
     bee_colony_.def(bp::init<unsigned, unsigned>((bp::arg("gen") = 1u, bp::arg("limit") = 1u)));
     bee_colony_.def(
         bp::init<unsigned, unsigned, unsigned>((bp::arg("gen") = 1u, bp::arg("limit") = 20u, bp::arg("seed"))));
+    bee_colony_.enable_pickling();
     expose_algo_log(bee_colony_, bee_colony_get_log_docstring().c_str());
     bee_colony_.def("get_seed", &bee_colony::get_seed, generic_uda_get_seed_docstring().c_str());
     // DE
@@ -203,6 +206,7 @@ void expose_algorithms_0()
     compass_search_.def("get_stop_range", &compass_search::get_stop_range);
     compass_search_.def("get_reduction_coeff", &compass_search::get_reduction_coeff);
     compass_search_.def("get_verbosity", &compass_search::get_verbosity);
+    compass_search_.enable_pickling();
     expose_not_population_based(compass_search_, "compass_search");
     // DE-1220
     auto de1220_ = expose_algorithm_pygmo<de1220>("de1220", de1220_docstring().c_str());
@@ -234,6 +238,7 @@ void expose_algorithms_0()
                                      (bp::arg("gen") = 1u, bp::arg("allowed_variants") = de1220_allowed_variants(),
                                       bp::arg("variant_adptv") = 1u, bp::arg("ftol") = 1e-6, bp::arg("xtol") = 1e-6,
                                       bp::arg("memory") = false, bp::arg("seed"))));
+    de1220_.enable_pickling();
     expose_algo_log(de1220_, de1220_get_log_docstring().c_str());
     de1220_.def("get_seed", &de1220::get_seed, generic_uda_get_seed_docstring().c_str());
 #if defined(PAGMO_WITH_EIGEN3)
@@ -247,6 +252,7 @@ void expose_algorithms_0()
         (bp::arg("gen") = 1u, bp::arg("cc") = -1., bp::arg("cs") = -1., bp::arg("c1") = -1., bp::arg("cmu") = -1.,
          bp::arg("sigma0") = 0.5, bp::arg("ftol") = 1e-6, bp::arg("xtol") = 1e-6, bp::arg("memory") = false,
          bp::arg("force_bounds") = false, bp::arg("seed"))));
+    cmaes_.enable_pickling();
     expose_algo_log(cmaes_, cmaes_get_log_docstring().c_str());
     cmaes_.def("get_seed", &cmaes::get_seed, generic_uda_get_seed_docstring().c_str());
     // xNES
@@ -259,6 +265,7 @@ void expose_algorithms_0()
         (bp::arg("gen") = 1u, bp::arg("eta_mu") = -1., bp::arg("eta_sigma") = -1., bp::arg("eta_b") = -1.,
          bp::arg("sigma0") = -1, bp::arg("ftol") = 1e-6, bp::arg("xtol") = 1e-6, bp::arg("memory") = false,
          bp::arg("force_bounds") = false, bp::arg("seed"))));
+    xnes_.enable_pickling();
     expose_algo_log(xnes_, xnes_get_log_docstring().c_str());
     xnes_.def("get_seed", &xnes::get_seed, generic_uda_get_seed_docstring().c_str());
 #endif
@@ -284,6 +291,7 @@ void expose_algorithms_0()
                }),
                moead_get_log_docstring().c_str());
     moead_.def("get_seed", &moead::get_seed, generic_uda_get_seed_docstring().c_str());
+    moead_.enable_pickling();
 
 #if defined(PAGMO_WITH_IPOPT)
     // Ipopt.
@@ -359,6 +367,7 @@ void expose_algorithms_0()
                }),
                ipopt_get_numeric_options_docstring().c_str());
     ipopt_.def("reset_numeric_options", &ipopt::reset_numeric_options, ipopt_reset_numeric_options_docstring().c_str());
+    ipopt_.enable_pickling();
 #endif
 }
 } // namespace pygmo

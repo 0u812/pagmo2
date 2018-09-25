@@ -85,6 +85,7 @@ void expose_algorithms_1()
 {
     // Null algo.
     auto na = expose_algorithm_pygmo<null_algorithm>("null_algorithm", null_algorithm_docstring().c_str());
+    na.enable_pickling();
     // PSO
     auto pso_ = expose_algorithm_pygmo<pso>("pso", pso_docstring().c_str());
     pso_.def(bp::init<unsigned, double, double, double, double, unsigned, unsigned, unsigned, bool>(
@@ -97,6 +98,7 @@ void expose_algorithms_1()
          bp::arg("memory") = false, bp::arg("seed"))));
     expose_algo_log(pso_, pso_get_log_docstring().c_str());
     pso_.def("get_seed", &pso::get_seed, generic_uda_get_seed_docstring().c_str());
+    pso_.enable_pickling();
     // PSO (generational)
     auto pso_gen_ = expose_algorithm_pygmo<pso_gen>("pso_gen", pso_gen_docstring().c_str());
     pso_gen_.def(bp::init<unsigned, double, double, double, double, unsigned, unsigned, unsigned, bool>(
@@ -107,12 +109,14 @@ void expose_algorithms_1()
         (bp::arg("gen") = 1u, bp::arg("omega") = 0.7298, bp::arg("eta1") = 2.05, bp::arg("eta2") = 2.05,
          bp::arg("max_vel") = 0.5, bp::arg("variant") = 5u, bp::arg("neighb_type") = 2u, bp::arg("neighb_param") = 4u,
          bp::arg("memory") = false, bp::arg("seed"))));
+    pso_gen_.enable_pickling();
     expose_algo_log(pso_gen_, pso_gen_get_log_docstring().c_str());
     pso_gen_.def("get_seed", &pso_gen::get_seed, generic_uda_get_seed_docstring().c_str());
     // SEA
     auto sea_ = expose_algorithm_pygmo<sea>("sea", sea_docstring().c_str());
     sea_.def(bp::init<unsigned>((bp::arg("gen") = 1u)));
     sea_.def(bp::init<unsigned, unsigned>((bp::arg("gen") = 1u, bp::arg("seed"))));
+    sea_.enable_pickling();
     expose_algo_log(sea_, sea_get_log_docstring().c_str());
     sea_.def("get_seed", &sea::get_seed, generic_uda_get_seed_docstring().c_str());
     // IHS
@@ -135,6 +139,7 @@ void expose_algorithms_1()
              }),
              ihs_get_log_docstring().c_str());
     ihs_.def("get_seed", &ihs::get_seed, generic_uda_get_seed_docstring().c_str());
+    ihs_.enable_pickling();
     // SGA
     auto sga_ = expose_algorithm_pygmo<sga>("sga", sga_docstring().c_str());
     sga_.def(bp::init<unsigned, double, double, double, double, unsigned, std::string, std::string, std::string>(
@@ -148,6 +153,7 @@ void expose_algorithms_1()
              bp::arg("mutation") = "polynomial", bp::arg("selection") = "tournament", bp::arg("seed"))));
     expose_algo_log(sga_, sga_get_log_docstring().c_str());
     sga_.def("get_seed", &sga::get_seed, generic_uda_get_seed_docstring().c_str());
+    sga_.enable_pickling();
     // SIMULATED ANNEALING
     auto simulated_annealing_
         = expose_algorithm_pygmo<simulated_annealing>("simulated_annealing", simulated_annealing_docstring().c_str());
@@ -157,6 +163,7 @@ void expose_algorithms_1()
     simulated_annealing_.def(bp::init<double, double, unsigned, unsigned, unsigned, double, unsigned>(
         (bp::arg("Ts") = 10., bp::arg("Tf") = 0.1, bp::arg("n_T_adj") = 10u, bp::arg("n_range_adj") = 10u,
          bp::arg("bin_size") = 10u, bp::arg("start_range") = 1., bp::arg("seed"))));
+    simulated_annealing_.enable_pickling();
     expose_algo_log(simulated_annealing_, simulated_annealing_get_log_docstring().c_str());
     simulated_annealing_.def("get_seed", &simulated_annealing::get_seed, generic_uda_get_seed_docstring().c_str());
     expose_not_population_based(simulated_annealing_, "simulated_annealing");
@@ -168,6 +175,7 @@ void expose_algorithms_1()
     sade_.def(bp::init<unsigned, unsigned, unsigned, double, double, bool, unsigned>(
         (bp::arg("gen") = 1u, bp::arg("variant") = 2u, bp::arg("variant_adptv") = 1u, bp::arg("ftol") = 1e-6,
          bp::arg("xtol") = 1e-6, bp::arg("memory") = false, bp::arg("seed"))));
+    sade_.enable_pickling();
     expose_algo_log(sade_, sade_get_log_docstring().c_str());
     sade_.def("get_seed", &sade::get_seed, generic_uda_get_seed_docstring().c_str());
     // NSGA2
@@ -189,6 +197,7 @@ void expose_algorithms_1()
                nsga2_get_log_docstring().c_str());
 
     nsga2_.def("get_seed", &nsga2::get_seed, generic_uda_get_seed_docstring().c_str());
+    nsga2_.enable_pickling();
 #if defined(PAGMO_WITH_NLOPT)
     // NLopt.
     auto nlopt_ = expose_algorithm_pygmo<nlopt>("nlopt", nlopt_docstring().c_str());
@@ -202,6 +211,7 @@ void expose_algorithms_1()
     add_property(nlopt_, "maxeval", &nlopt::get_maxeval, &nlopt::set_maxeval, nlopt_maxeval_docstring().c_str());
     add_property(nlopt_, "maxtime", &nlopt::get_maxtime, &nlopt::set_maxtime, nlopt_maxtime_docstring().c_str());
     expose_not_population_based(nlopt_, "nlopt");
+    nlopt_.enable_pickling();
     expose_algo_log(nlopt_, nlopt_get_log_docstring().c_str());
     nlopt_.def("get_last_opt_result", lcast([](const nlopt &n) { return static_cast<int>(n.get_last_opt_result()); }),
                nlopt_get_last_opt_result_docstring().c_str());

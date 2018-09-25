@@ -88,19 +88,23 @@ void expose_problems_1()
     auto rb = expose_problem_pygmo<rosenbrock>("rosenbrock", rosenbrock_docstring().c_str());
     rb.def(bp::init<vector_double::size_type>((bp::arg("dim"))));
     rb.def("best_known", &best_known_wrapper<rosenbrock>, problem_get_best_docstring("Rosenbrock").c_str());
+    rb.enable_pickling();
     // MINLP-Rastrigin.
     auto minlp_rastr = expose_problem_pygmo<minlp_rastrigin>("minlp_rastrigin", minlp_rastrigin_docstring().c_str());
     minlp_rastr.def(bp::init<unsigned, unsigned>((bp::arg("dim_c") = 1u, bp::arg("dim_i") = 1u)));
+    minlp_rastr.enable_pickling();
     // Rastrigin.
     auto rastr = expose_problem_pygmo<rastrigin>("rastrigin", "__init__(dim = 1)\n\nThe Rastrigin problem.\n\n"
                                                               "See :cpp:class:`pagmo::rastrigin`.\n\n");
     rastr.def(bp::init<unsigned>((bp::arg("dim") = 1)));
     rastr.def("best_known", &best_known_wrapper<rastrigin>, problem_get_best_docstring("Rastrigin").c_str());
+    rastr.enable_pickling();
     // Schwefel.
     auto sch = expose_problem_pygmo<schwefel>("schwefel", "__init__(dim = 1)\n\nThe Schwefel problem.\n\n"
                                                           "See :cpp:class:`pagmo::schwefel`.\n\n");
     sch.def(bp::init<unsigned>((bp::arg("dim"))));
     sch.def("best_known", &best_known_wrapper<schwefel>, problem_get_best_docstring("Schwefel").c_str());
+    sch.enable_pickling();
     // ZDT.
     auto zdt_p = expose_problem_pygmo<zdt>("zdt", "__init__(prob_id = 1, param = 30)\n\nThe ZDT problem.\n\n"
                                                   "See :cpp:class:`pagmo::zdt`.\n\n");
@@ -108,16 +112,19 @@ void expose_problems_1()
     zdt_p.def("p_distance", lcast([](const zdt &z, const bp::object &x) { return z.p_distance(to_vd(x)); }));
     zdt_p.def("p_distance", lcast([](const zdt &z, const population &pop) { return z.p_distance(pop); }),
               zdt_p_distance_docstring().c_str());
+    zdt_p.enable_pickling();
 
 #if defined(PAGMO_ENABLE_CEC2013)
     // See the explanation in pagmo/config.hpp.
     auto cec2013_ = expose_problem_pygmo<cec2013>("cec2013", cec2013_docstring().c_str());
     cec2013_.def(bp::init<unsigned, unsigned>((bp::arg("prob_id") = 1, bp::arg("dim") = 2)));
+    cec2013_.enable_pickling();
 #endif
 
     // Luksan Vlcek 1
     auto lv_ = expose_problem_pygmo<luksan_vlcek1>("luksan_vlcek1", luksan_vlcek1_docstring().c_str());
     lv_.def(bp::init<unsigned>(bp::arg("dim")));
+    lv_.enable_pickling();
 
     // Translate meta-problem
     auto translate_ = expose_problem_pygmo<translate>("translate", translate_docstring().c_str());
@@ -133,6 +140,7 @@ void expose_problems_1()
                  bp::make_function(lcast([](translate &udp) -> problem & { return udp.get_inner_problem(); }),
                                    bp::return_internal_reference<>()),
                  generic_udp_inner_problem_docstring().c_str());
+    translate_.enable_pickling();
     // Unconstrain meta-problem.
     auto unconstrain_ = expose_problem_pygmo<unconstrain>("unconstrain", unconstrain_docstring().c_str());
     // NOTE: An __init__ wrapper on the Python side will take care of cting a pagmo::problem from the input UDP,
@@ -146,5 +154,6 @@ void expose_problems_1()
                  bp::make_function(lcast([](unconstrain &udp) -> problem & { return udp.get_inner_problem(); }),
                                    bp::return_internal_reference<>()),
                  generic_udp_inner_problem_docstring().c_str());
+    unconstrain_.enable_pickling();
 }
 } // namespace pygmo

@@ -135,28 +135,33 @@ void expose_problems_0()
     test_p.def(bp::init<unsigned>((bp::arg("nobj"))));
     test_p.def("get_n", &test_problem::get_n);
     test_p.def("set_n", &test_problem::set_n);
+    test_p.enable_pickling();
     // Thread unsafe test problem.
     expose_problem_pygmo<tu_test_problem>("_tu_test_problem", "A thread unsafe test problem.");
     // Null problem.
     auto np = expose_problem_pygmo<null_problem>("null_problem", null_problem_docstring().c_str());
     np.def(bp::init<vector_double::size_type, vector_double::size_type, vector_double::size_type>(
         (bp::arg("nobj") = 1, bp::arg("nec") = 0, bp::arg("nic") = 0)));
+    np.enable_pickling();
     // Hock-Schittkowsky 71
     auto hs71 = expose_problem_pygmo<hock_schittkowsky_71>("hock_schittkowsky_71",
                                                            "__init__()\n\nThe Hock-Schittkowsky 71 problem.\n\n"
                                                            "See :cpp:class:`pagmo::hock_schittkowsky_71`.\n\n");
     hs71.def("best_known", &best_known_wrapper<hock_schittkowsky_71>,
              problem_get_best_docstring("Hock-Schittkowsky 71").c_str());
+    hs71.enable_pickling();
     // Ackley.
     auto ack = expose_problem_pygmo<ackley>("ackley", "__init__(dim = 1)\n\nThe Ackley problem.\n\n"
                                                       "See :cpp:class:`pagmo::ackley`.\n\n");
     ack.def(bp::init<unsigned>((bp::arg("dim"))));
     ack.def("best_known", &best_known_wrapper<ackley>, problem_get_best_docstring("Ackley").c_str());
+    ack.enable_pickling();
     // Griewank.
     auto griew = expose_problem_pygmo<griewank>("griewank", "__init__(dim = 1)\n\nThe Griewank problem.\n\n"
                                                             "See :cpp:class:`pagmo::griewank`.\n\n");
     griew.def(bp::init<unsigned>((bp::arg("dim"))));
     griew.def("best_known", &best_known_wrapper<griewank>, problem_get_best_docstring("Griewank").c_str());
+    griew.enable_pickling();
     // DTLZ.
     auto dtlz_p = expose_problem_pygmo<dtlz>("dtlz", dtlz_docstring().c_str());
     dtlz_p.def(bp::init<unsigned, unsigned, unsigned, unsigned>(
@@ -164,6 +169,7 @@ void expose_problems_0()
     dtlz_p.def("p_distance", lcast([](const dtlz &z, const bp::object &x) { return z.p_distance(to_vd(x)); }));
     dtlz_p.def("p_distance", lcast([](const dtlz &z, const population &pop) { return z.p_distance(pop); }),
                dtlz_p_distance_docstring().c_str());
+    dtlz_p.enable_pickling();
     // Inventory.
     auto inv = expose_problem_pygmo<inventory>(
         "inventory", "__init__(weeks = 4,sample_size = 10,seed = random)\n\nThe inventory problem.\n\n"
@@ -171,21 +177,25 @@ void expose_problems_0()
     inv.def(bp::init<unsigned, unsigned>((bp::arg("weeks") = 4u, bp::arg("sample_size") = 10u)));
     inv.def(
         bp::init<unsigned, unsigned, unsigned>((bp::arg("weeks") = 4u, bp::arg("sample_size") = 10u, bp::arg("seed"))));
+    inv.enable_pickling();
 #if defined(PAGMO_ENABLE_CEC2014)
     // See the explanation in pagmo/config.hpp.
     auto cec2014_ = expose_problem_pygmo<cec2014>("cec2014", cec2014_docstring().c_str());
     cec2014_.def(bp::init<unsigned, unsigned>((bp::arg("prob_id") = 1, bp::arg("dim") = 2)));
+    cec2014_.enable_pickling();
 #endif
 
     // CEC 2006
     auto cec2006_ = expose_problem_pygmo<cec2006>("cec2006", cec2006_docstring().c_str());
     cec2006_.def(bp::init<unsigned>((bp::arg("prob_id"))));
     cec2006_.def("best_known", &best_known_wrapper<cec2006>, problem_get_best_docstring("CEC 2006").c_str());
+    cec2006_.enable_pickling();
 
     // CEC 2009
     auto cec2009_ = expose_problem_pygmo<cec2009>("cec2009", cec2009_docstring().c_str());
     cec2009_.def(bp::init<unsigned, bool, unsigned>(
         (bp::arg("prob_id") = 1u, bp::arg("is_constrained") = false, bp::arg("dim") = 30u)));
+    cec2009_.enable_pickling();
 
     // Decompose meta-problem.
     auto decompose_ = expose_problem_pygmo<decompose>("decompose", decompose_docstring().c_str());
@@ -206,5 +216,6 @@ void expose_problems_0()
                  bp::make_function(lcast([](decompose &udp) -> problem & { return udp.get_inner_problem(); }),
                                    bp::return_internal_reference<>()),
                  generic_udp_inner_problem_docstring().c_str());
+    decompose_.enable_pickling();
 }
 } // namespace pygmo
