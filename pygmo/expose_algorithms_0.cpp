@@ -189,6 +189,7 @@ void expose_algorithms_0()
     de_.def(bp::init<unsigned, double, double, unsigned, double, double, unsigned>(
         (bp::arg("gen") = 1u, bp::arg("F") = .8, bp::arg("CR") = .9, bp::arg("variant") = 2u, bp::arg("ftol") = 1e-6,
          bp::arg("xtol") = 1E-6, bp::arg("seed"))));
+    de_.enable_pickling();
     expose_algo_log(de_, de_get_log_docstring().c_str());
     de_.def("get_seed", &de::get_seed, generic_uda_get_seed_docstring().c_str());
     // COMPASS SEARCH
